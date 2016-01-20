@@ -1,0 +1,12 @@
+{
+  "name": "RelateTable",
+  "2D": true,
+  "3D": false,
+  "platform": "HTML",
+  "version": "1.4",
+  "wabVersion": "1.4",
+  "author": "Zhenyang Hua <zhenyang.hua@woolpert.com>",
+  "description": "Editor for tables related to spatial data",
+  "copyright": "Woolpert, Inc.",
+  "license": "MIT"
+}

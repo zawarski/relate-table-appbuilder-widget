@@ -1,0 +1,169 @@
+/* dgrid settings */
+.jimu-widget-relatetable .dgrid {
+  height: auto;
+}
+.jimu-widget-relatetable .dgrid .dgrid-scroller {
+  position: relative;
+  max-height: 20em;
+  overflow: auto;
+}
+.jimu-widget-relatetable .dgrid-grid {
+  width: 100%;
+}
+.jimu-widget-relatetable .dgrid-cell {
+  width: 110px;
+}
+.jimu-widget-relatetable .dgrid-selected {
+  background-color: #2ecc71;
+  color: #ecf0f1;
+}
+.jimu-widget-relatetable th.dgrid-cell:nth-child(1) .dgrid-sort-arrow {
+  visibility: hidden;
+}
+/* Custom widget settings */
+.jimu-widget-relatetable .btn {
+  position: relative;
+
+  display: block;
+  margin: 25px auto;
+  padding: 0;
+
+  overflow: hidden;
+
+  border-width: 0;
+  outline: none;
+  border-radius: 2px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .6);
+
+  font-family: Trebuchet, Arial, sans-serif;
+  font-size: 1em;
+  text-align: center;
+  
+  background-color: #2ecc71;
+  color: #ecf0f1;
+  
+  transition: background-color .3s;
+}
+
+.jimu-widget-relatetable .btn:hover {
+  background-color: #27ae60;
+}
+
+.jimu-widget-relatetable .btn span {
+  display: block;
+  padding: 12px 18px;
+}
+
+.jimu-widget-relatetable .btn:before {
+  content: "";
+  
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  
+  display: block;
+  width: 0;
+  padding-top: 0;
+    
+  border-radius: 100%;
+  
+  background-color: rgba(236, 240, 241, .3);
+  
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+.jimu-widget-relatetable .btn:active:before {
+  width: 120%;
+  padding-top: 120%;
+  
+  transition: width .2s ease-out, padding-top .2s ease-out;
+}
+
+.jimu-widget-relatetable .btn.orange {
+  background-color: #e67e22;
+}
+
+.jimu-widget-relatetable .btn.orange:hover {
+  background-color: #d35400;
+}
+
+.jimu-widget-relatetable .btn.red {
+  background-color: #e74c3c;
+}
+
+.jimu-widget-relatetable .btn.red:hover {
+  background-color: #c0392b;
+}
+
+.jimu-widget-relatetable .btn.grey {
+  background-color: #e6e6e6;
+  color: #1a1a1a;
+}
+
+.jimu-widget-relatetable .btn.grey:hover {
+  background-color: #a6a6a6;
+  color: #ecf0f1;
+}
+
+.jimu-widget-relatetable select {
+  display: inline-block;
+  box-sizing: border-box;
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+  padding: 0;
+  margin: 0 0 8px;
+  height: 2em;
+  line-height: 3;
+  border: none;
+  border-bottom: 1px solid rgba(0,0,0,0.12);
+  outline: none;
+  color: rgba(0,0,0,0.87);
+  font-weight: medium;
+  font-size: 1em;
+  vertical-align: top;
+  -webkit-transition: border 0.56s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: border 0.56s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.jimu-widget-relatetable select:focus {
+  border-bottom: 2px solid #2196f3;
+}
+
+.jimu-widget-relatetable .inline {
+	display: inline-block;
+}
+.jimu-widget-relatetable .select-group {
+	padding-top: 8px;
+	padding-bottom: 8px;
+}
+
+.jimu-widget-relatetable .inline .btn {
+  margin-left: 8px;
+}
+.jimu-widget-relatetable .inline .btn:first-child {
+  margin-left: 26px;
+}
+.jimu-widget-relatetable .alert-success {
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+}
+.jimu-widget-relatetable .alert-danger {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+}
+.jimu-widget-relatetable .alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+.jimu-widget-relatetable .hide {
+  margin-top: -67px;
+  -webkit-transition: all 0.56s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.56s cubic-bezier(0.4, 0, 0.2, 1);
+}

@@ -1,0 +1,23 @@
+<div>
+	<div data-dojo-attach-point="alertNode" class="hide">
+		<div data-dojo-attach-point="successNode" class="alert alert-success" >Successfully saved!</div>
+		<div data-dojo-attach-point="failNode" class="alert alert-danger" style="display: none">Failed to save...</div>
+	</div>
+	<div class="inline">
+		<div class="select-group">
+			<label for="selectLayerNode">Spatial Layer: </label>
+			<select data-dojo-attach-point="selectLayerNode" id="selectLayerNode"></select>
+		</div>
+		<div class="select-group">
+			<label for="selectRelationshipNode">Relationship: </label>
+			<select data-dojo-attach-point="selectRelationshipNode" id="selectRelationshipNode"></select>
+		</div>
+	</div>
+	<div class="inline">
+		<button id="btnSelectFeature" data-dojo-attach-point="selectFeatureNode" class="btn grey inline"><span>Select Off</span></button>
+		<button id="btnSave" data-dojo-attach-point="saveNode" class="btn inline"><span>Save</span></button>
+		<button id="btnCancel" data-dojo-attach-point="cancelNode" class="btn orange inline"><span>Restore</span></button>
+	</div>
+	
+	<div id="editGrid"></div>
+</div>

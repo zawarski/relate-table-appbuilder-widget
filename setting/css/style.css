@@ -1,0 +1,69 @@
+/* jimu-widget-coordinate-setting */
+.jimu-widget-relatetable-setting{
+  margin:0;
+  padding:0;
+  font-size:15px;
+}
+.jimu-widget-relatetable-setting textarea {
+  white-space: pre;
+  word-wrap: normal;
+  overflow-x: scroll;
+  overflow-y: scroll;
+}
+
+.jimu-widget-relatetable-setting select {
+  display: inline-block;
+  box-sizing: border-box;
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+  padding: 0;
+  margin: 0 0 8px;
+  height: 2em;
+  line-height: 3;
+  border: none;
+  border-bottom: 1px solid rgba(0,0,0,0.12);
+  outline: none;
+  color: rgba(0,0,0,0.87);
+  font-weight: medium;
+  font-size: 1em;
+  vertical-align: top;
+  -webkit-transition: border 0.56s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: border 0.56s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.jimu-widget-relatetable-setting select:focus {
+  border-bottom: 2px solid #2196f3;
+}
+
+.jimu-widget-relatetable-setting .select-group {
+	padding-top: 16px;
+	padding-bottom: 16px;
+
+	text-align: center;
+}
+.jimu-widget-relatetable-setting .select-group > label {
+	vertical-align: sub;
+    color: #777;
+    font-size: 18px;
+    font-weight: normal;
+    margin-bottom: 10px;
+}
+
+.jimu-widget-relatetable-setting .title {
+  font-family: "Helvetica", san-serif;
+  font-size: 1.6em;
+  color: #666;
+  margin-bottom: 1em;
+}
+
+.jimu-widget-relatetable-setting .alert-warning {
+    color: #8a6d3b;
+    background-color: #fcf8e3;
+    border-color: #faebcc;
+}
+.jimu-widget-relatetable-setting .alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    display: none;
+}
