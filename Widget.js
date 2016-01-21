@@ -113,8 +113,6 @@ define(['dojo/_base/declare',
 				console.log('startup');
 
 				this._initLayerSelector(this.map);
-				this._initRelatedFeatureLayers(this.map);
-				// this._initRelationshipSelector(this.map);
 
 				this.editGrid = new (declare([ Grid, Keyboard, Selection, Editor, ColumnResizer ]))({
 				}, 'editGrid');
@@ -126,7 +124,9 @@ define(['dojo/_base/declare',
 					this._gatherSelectInfo();
 				}));
 
-				on(this.selectedLayer, 'click', lang.hitch(this, this._findRelate));
+				if(!!this.selectedLayer) {
+					on(this.selectedLayer, 'click', lang.hitch(this, this._findRelate));
+				}				
 
 				on(this.saveNode, 'click', lang.hitch(this, this._saveEdits));
 				on(this.cancelNode, 'click', lang.hitch(this, this._cancelEdits));
@@ -186,24 +186,36 @@ define(['dojo/_base/declare',
 
 			_initLayerSelector: function(map) {
 				var me = this;
-				var layers = map.itemInfo.itemData.operationalLayers
-					.filter(function(layer) {
-						return layer.layerObject.relationships.length > 0;
+				try {
+					var layers = map.itemInfo.itemData.operationalLayers
+						.filter(function(layer) {
+							if (layer.layerObject && layer.layerObject.relationships) {
+								return layer.layerObject.relationships.length > 0;
+							} else {
+								return false;
+							}
+						});
+
+					if (layers.length === 0) return;
+
+					array.forEach(layers, function(entry) {
+						var isSelected = (entry.title.toLowerCase() === me.config.defaultSpatialLayer.toLowerCase()) ? 'selected ' : '';
+						var optionNode = '<option ' + isSelected + 'value=' + entry.id + '>' + entry.title + '</option>';
+						domConstruct.place(optionNode, 'selectLayerNode', 'last');
 					});
-				array.forEach(layers, function(entry) {
-					var isSelected = (entry.title.toLowerCase() === me.config.defaultSpatialLayer.toLowerCase()) ? 'selected ' : '';
-					var optionNode = '<option ' + isSelected + 'value=' + entry.id + '>' + entry.title + '</option>';
-					domConstruct.place(optionNode, 'selectLayerNode', 'last');
-				});
 
-				this.selectedLayer = layers[0].layerObject;
-				// this._setFieldSelector(this.selectedLayer);
-				this._setRelationshipSelector(this.selectedLayer);
+					this.selectedLayer = layers[0].layerObject;
 
-				on(this.selectLayerNode, 'change', lang.hitch(this, function() {
-					// this._updateFieldSelector(layers);
-					this._updateRelationshipSelector(layers);
-				}));
+					this._setRelationshipSelector(this.selectedLayer);
+
+					this._initRelatedFeatureLayers(map);
+
+					on(this.selectLayerNode, 'change', lang.hitch(this, function() {
+						this._updateRelationshipSelector(layers);
+					}));
+				} catch(err) {
+
+				}
 			},
 
 			_setRelationshipSelector: function(layer) {
@@ -249,7 +261,7 @@ define(['dojo/_base/declare',
 				var relationshipOptions = this.selectRelationshipNode.options;
 				this.selectedRelationship = relationshipOptions[relationshipOptions.selectedIndex].value;
 
-				console.log(this.selectedLayer, this.selectedRelationship);
+				// console.log(this.selectedLayer, this.selectedRelationship);
 			},
 
 			_findRelate: function(event) {
