@@ -19,6 +19,9 @@
 define(['dojo/_base/declare', 
 			'jimu/BaseWidget',
 
+			'dijit/_WidgetsInTemplateMixin',
+			'dijit/registry',
+
 			'dojo/_base/array',
 			'dojo/has',
 			'dojo/on',
@@ -45,6 +48,9 @@ define(['dojo/_base/declare',
 	function(declare, 
 		BaseWidget,
 		
+		_WidgetsInTemplateMixin,
+		registry,
+
 		array,
 		has,
 		on,
@@ -66,7 +72,7 @@ define(['dojo/_base/declare',
 		Grid,
 		ColumnResizer) {
 		//To create a widget, you need to derive from BaseWidget.
-		return declare([BaseWidget], {
+		return declare([BaseWidget, _WidgetsInTemplateMixin], {
 			// Custom widget code goes here
 
 			baseClass: 'jimu-widget-relatetable',
@@ -82,6 +88,12 @@ define(['dojo/_base/declare',
 			editGrid: null,
 			updatedFeatures: [],
 			featuresCopy: null,
+
+			relationshipFields: null,
+			keyField: null,
+			keyFieldValue: null,
+			relatedTableLayer: null,
+			lastMouseEvent: null,
 
 			//methods to communication with app container:
 
@@ -125,7 +137,10 @@ define(['dojo/_base/declare',
 				}));
 
 				if(!!this.selectedLayer) {
-					on(this.selectedLayer, 'click', lang.hitch(this, this._findRelate));
+					on(this.selectedLayer, 'click', lang.hitch(this, function(event) {
+						this.lastMouseEvent = event;
+						this._findRelate(event);
+					}));
 				}				
 
 				on(this.saveNode, 'click', lang.hitch(this, this._saveEdits));
@@ -133,6 +148,10 @@ define(['dojo/_base/declare',
 
 				on(this.selectLayerNode, 'change', lang.hitch(this, this._disableSelect));
 				on(this.selectRelationshipNode, 'change', lang.hitch(this, this._disableSelect));
+
+				on(this.addFeatureNode, 'click', lang.hitch(this, this._showAddFeatureDialog));
+				on(this.addRecordNode, 'click', lang.hitch(this, this._saveAddedRecord));
+				on(this.cancelRecordNode, 'click', lang.hitch(this, this._cancelAddedRecord));
 			},
 
 			// onOpen: function(){
@@ -266,6 +285,7 @@ define(['dojo/_base/declare',
 
 			_findRelate: function(event) {
 				console.log(event);
+				this._getFields(event.graphic.attributes);
 				if(domClass.contains(this.selectFeatureNode, 'toggle-on')) {
 
 					this._clearGrid();
@@ -293,7 +313,7 @@ define(['dojo/_base/declare',
 						return feature.attributes;
 					});
 
-				// make a copy of original data for cancel editing.
+				// make a copy of original data for cancel editing and add feature.
 				this.featuresCopy = dojo.clone(relatedData);
 
 				// Continue formatting...
@@ -443,6 +463,73 @@ define(['dojo/_base/declare',
 				setTimeout(function(){ 
 					domClass.add(me.alertNode, 'hide');
 				}, 3000);
+			},
+
+			_getFields: function(selectedFeatureAttributes) {
+				this.relatedTableLayer = this.relatedFeatureLayers[this.selectRelationshipNode.options.selectedIndex];
+
+				this.relationshipFields = this.relatedTableLayer.fields;
+
+				this.keyField = this.map.itemInfo.itemData.operationalLayers[this.selectLayerNode.options.selectedIndex].layerObject.relationships[this.selectRelationshipNode.options.selectedIndex].keyField;
+
+				this.keyFieldValue = selectedFeatureAttributes[this.keyField];
+			},
+
+			_showAddFeatureDialog: function() {
+				var self = this;
+
+				console.log('relationshipFields', this.relationshipFields);
+				console.log('keyField', this.keyField);
+				console.log('keyFieldValue', this.keyFieldValue);
+
+				var lines = '';
+				this.relationshipFields.forEach(function(field) {
+					// skip "OID" and "GlobalID"
+					if (field.name !== "OBJECTID" && field.name !== "GlobalID") {
+						if (field.name === self.keyField) {
+							var line = '<tr style="width: calc(100% - 10px); padding: 5px;"><td style="width: 200px;"><label for="' + field.name + '" title="' + field.name + '">' + field.alias + '</label></td><td><input id="' + field.name + '" name="' + field.name + '" value="' + self.keyFieldValue + '"><td></tr>';
+						} else {
+							var line = '<tr style="width: calc(100% - 10px); padding: 5px;"><td style="width: 200px;"><label for="' + field.name + '" title="' + field.name + '">' + field.alias + '</label></td><td><input id="' + field.name + '" name="' + field.name + '"></td></tr>';
+						}
+						
+						lines += line;
+					}
+				})
+				var table =  '<table id="dialogTable">' + lines + '</table>';
+				var tableWidget = declare('tableWidget', [BaseWidget, _WidgetsInTemplateMixin], {
+					templateString: table
+				});
+
+				this.dialogInput.innerHTML = table;
+				
+				this.dialog.show();
+			},
+
+			_saveAddedRecord: function() {
+				var self = this;
+				var attributes = {};
+				query('#dialogTable input').forEach(function(node) {
+					attributes[node.name] = node.value;
+				});
+				console.log(attributes)
+
+				var targetGraphics =  [new Graphic(null, null, attributes)];
+
+				this.relatedTableLayer.applyEdits(targetGraphics, null, null, function(res){
+					// Success to save
+					registry.byId('dialog').hide();
+					self._findRelate(self.lastMouseEvent);
+					self._showAlert(true);
+					console.log('save succeeded.');
+				}, function(err){
+					// Fail to save
+					self._showAlert(false);
+					console.log(err);
+				});
+			},
+
+			_cancelAddedRecord: function() {
+				registry.byId('dialog').hide();
 			}
 
 		});

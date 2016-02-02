@@ -14,10 +14,25 @@
 		</div>
 	</div>
 	<div class="inline">
-		<button id="btnSelectFeature" data-dojo-attach-point="selectFeatureNode" class="btn grey inline"><span>Select Off</span></button>
-		<button id="btnSave" data-dojo-attach-point="saveNode" class="btn inline"><span>Save</span></button>
-		<button id="btnCancel" data-dojo-attach-point="cancelNode" class="btn orange inline"><span>Restore</span></button>
+		<div>
+			<button id="btnSelectFeature" data-dojo-attach-point="selectFeatureNode" class="btn grey inline"><span>Select Off</span></button>
+		</div>
+		<div>
+			<button id="btnSave" data-dojo-attach-point="saveNode" class="btn inline"><span>Save</span></button>
+			<button id="btnCancel" data-dojo-attach-point="cancelNode" class="btn orange inline"><span>Restore</span></button>
+			<button id="btnAddFeature" data-dojo-attach-point="addFeatureNode" class="btn inline"><span>Add</span></button>
+		</div>
 	</div>
 	
 	<div id="editGrid"></div>
+	
+	<div data-dojo-type="dijit/Dialog" id="dialog" data-dojo-attach-point="dialog" title="Add Record" style="width: 400px;">
+		<div class="dijitDialogPaneContentArea">
+			<div data-dojo-attach-point="dialogInput" style="padding: 10px;"></div>
+			<div style="text-align: center; margin-top: 10px;">
+				<button data-dojo-type="dijit/form/Button" data-dojo-attach-point="addRecordNode" name="submit" value="Submit" style="margin-right: 10px;">Add</button>
+				<button data-dojo-type="dijit/form/Button" data-dojo-attach-point="cancelRecordNode"  type="button">Cancel</button>
+			</div>
+		</div>
+	</div>
 </div>
