@@ -508,7 +508,7 @@ define(['dojo/_base/declare',
 					// skip "OID" and "GlobalID"
 					if (field.name !== "OBJECTID" && field.name !== "GlobalID") {
 						if (field.name === self.keyField) {
-							var line = '<tr style="width: calc(100% - 10px); padding: 5px;"><td style="width: 200px;"><label for="' + field.name + '" title="' + field.name + '">' + field.alias + '</label></td><td><input id="' + field.name + '" name="' + field.name + '" value="' + self.keyFieldValue + '"><td></tr>';
+							var line = '<tr style="width: calc(100% - 10px); padding: 5px;"><td style="width: 200px;"><label for="' + field.name + '" title="' + field.name + '">' + field.alias + '</label></td><td><input id="' + field.name + '" name="' + field.name + '" value="' + self.keyFieldValue + '" disabled><td></tr>';
 						} else {
 							var line = '<tr style="width: calc(100% - 10px); padding: 5px;"><td style="width: 200px;"><label for="' + field.name + '" title="' + field.name + '">' + field.alias + '</label></td><td><input id="' + field.name + '" name="' + field.name + '"></td></tr>';
 						}
