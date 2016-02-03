@@ -246,7 +246,7 @@ define(['dojo/_base/declare',
 
 				array.forEach(relationships, function(relationship) {
 					var isSelected = (relationship.name.toLowerCase() === me.config.defaultRelationship.toLowerCase()) ? 'selected ' : '';
-					var optionNode = '<option ' + isSelected + 'value=' + relationship.id+ '>' + relationship.name + '</option>';
+					var optionNode = '<option ' + isSelected + 'value=' + relationship.id + '|' + relationship.keyField + '>' + relationship.name + '</option>';
 					if (isSelected === 'selected') console.log(relationship, optionNode);
 					domConstruct.place(optionNode, 'selectRelationshipNode', 'last');
 				});
@@ -264,7 +264,7 @@ define(['dojo/_base/declare',
 			_updateRelationshipSelector: function(layers) {
 				var me = this;
 				var options = this.selectLayerNode.options;
-				var id = options[options.selectedIndex].value;
+				var id = options[options.selectedIndex].value.split('|')[0];
 				layers.forEach(function(entry) {
 					if (entry.id == id) {
 						me.selectedLayer = entry.layerObject;
@@ -278,7 +278,7 @@ define(['dojo/_base/declare',
 
 				// Get relationship id
 				var relationshipOptions = this.selectRelationshipNode.options;
-				this.selectedRelationship = relationshipOptions[relationshipOptions.selectedIndex].value;
+				this.selectedRelationship = relationshipOptions[relationshipOptions.selectedIndex].value.split('|')[0];
 
 				// console.log(this.selectedLayer, this.selectedRelationship);
 			},
@@ -354,12 +354,13 @@ define(['dojo/_base/declare',
 							var relationship = me.selectedLayer.relationships.filter(function(relationship) {
 								return relationship.id === +me.selectedRelationship;
 							}).reduce(function(prev) { return prev; });
-							return new RegExp(relationship.name).test(layer.name);
+							return new RegExp(relationship.name).test(layer.name) && /FeatureServer/.test(layer.url);
 						}).reduce(function(prev) { return prev; });
 					var targetGraphics =  this.updatedFeatures.map(function(attributes) {
 						return new Graphic(null, null, attributes);
 					});
 					featureLayer.applyEdits(null, targetGraphics, null, function(res){
+						console.log(res);
 						// Success to save
 						me.updatedFeatures.forEach(function(attributes) {
 							me.featuresCopy = me.featuresCopy.map(function(feature) {
@@ -466,13 +467,33 @@ define(['dojo/_base/declare',
 			},
 
 			_getFields: function(selectedFeatureAttributes) {
-				this.relatedTableLayer = this.relatedFeatureLayers[this.selectRelationshipNode.options.selectedIndex];
-
+				// this._getRelatedLayerIndexByName(this.selectRelationshipNode.value);
+				// this.relatedTableLayer = this.relatedFeatureLayers[this.selectRelationshipNode.options.selectedIndex];
+				this.relatedTableLayer = this._getRelatedLayerIndexByName(this.selectRelationshipNode.value.split('|')[1]);
 				this.relationshipFields = this.relatedTableLayer.fields;
 
-				this.keyField = this.map.itemInfo.itemData.operationalLayers[this.selectLayerNode.options.selectedIndex].layerObject.relationships[this.selectRelationshipNode.options.selectedIndex].keyField;
+				this._getLayerIndexById(this.selectLayerNode.value);
+				this.keyField = this._getLayerIndexById(this.selectLayerNode.value).layerObject.relationships[this.selectRelationshipNode.options.selectedIndex].keyField;
 
 				this.keyFieldValue = selectedFeatureAttributes[this.keyField];
+			},
+
+			_getLayerIndexById: function(id) {
+				console.log(id)
+				return this.map.itemInfo.itemData.operationalLayers.filter(function(layer){
+					return layer.id === id;
+				}).reduce(function(pre) {
+					return pre;
+				});
+			},
+
+			_getRelatedLayerIndexByName: function(keyField) {
+				var self = this;
+				return this.relatedFeatureLayers.filter(function(layer) {
+					return new RegExp(layer.relationships[self.selectRelationshipNode.options.selectedIndex].keyField).test(keyField) && /FeatureServer/.test(layer.url);
+				}).reduce(function(pre) {
+					return pre;
+				});
 			},
 
 			_showAddFeatureDialog: function() {
